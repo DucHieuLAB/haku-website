@@ -1,0 +1,35 @@
+html, body {
+    // scroll-behavior: smooth; // Cuộn mượt khi nhấn nút hoặc scroll
+    height: 100%;            // Đảm bảo chiều cao toàn màn hình
+    margin: 0;
+  }
+  
+  .wrapper-scroll {
+    @apply h-screen overflow-y-scroll snap-y snap-mandatory;
+    // Chiều cao full màn hình, cho phép cuộn theo chiều dọc
+    // snap-y: Kích hoạt scroll snapping theo chiều dọc
+    // snap-mandatory: Bắt buộc snap tới section gần nhất
+  }
+  
+  .section {
+    @apply h-screen snap-start flex items-center justify-center text-white text-3xl font-bold;
+    // Mỗi section chiếm toàn bộ màn hình
+    // snap-start: Khi scroll sẽ "dính" section này lên đầu
+    // flex items-center justify-center: canh giữa nội dung
+  }
+  
+  .section-bg-1 {
+    @apply bg-cover bg-center;
+    background-image: url('../assets/images/banner.png'); 
+  }
+  
+  .section-bg-2 {
+    @apply bg-cover bg-center;
+    background-image: url('../assets/images/banner.png');
+  }
+  
+  .section-content {
+   
+    // Thêm nền đen mờ và bo góc cho nội dung hiển thị đẹp hơn
+  }
+  

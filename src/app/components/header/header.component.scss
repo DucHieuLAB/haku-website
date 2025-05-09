@@ -1,0 +1,112 @@
+.site-header {
+    background-color: #141a3c;
+    border-bottom: 1px solid #ddd;
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+        
+          /* Menu Icon */
+    .menu-icon {
+        display: none;
+        cursor: pointer;
+        span {
+          display: block;
+          width: 30px;
+          height: 4px;
+          margin: 6px 0;
+          background-color: #333;
+          transition: 0.3s ease;
+        }
+      } 
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #dee9bf;
+        font-family: 'Press Start 2P', cursive;
+      }
+  
+      .navigation {
+        a {
+          margin-left: 20px;
+          text-decoration: none;
+          color: #dee9bf;
+          font-weight: 500;
+          transition: color 0.3s ease;
+          font-family: 'Press Start 2P', cursive;
+  
+          &:hover {
+            color: #e9e945;
+          }
+        }
+      }
+  
+      .search-form {
+        display: flex;
+        align-items: center;
+  
+        input {
+          padding: 8px;
+          font-size: 16px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          margin-right: 8px;
+          outline: none;
+        }
+  
+        button {
+          background-color: white ;
+          color: white;
+          padding: 8px 12px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+  
+          &:hover {
+            background-color: #b63f3f;
+          }
+        }
+      }
+    }
+      /* Media Query for Mobile */
+  @media (max-width: 768px) {
+    .container {
+      /* Hiện menu icon trên màn hình nhỏ */
+      .menu-icon {
+        display: block;
+      }
+
+      .navigation {
+        /* Ẩn menu mặc định */
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        background-color: #fff;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        padding: 20px;
+        border-top: 1px solid #ddd;
+
+        a {
+          margin: 10px 0;
+        }
+
+        &.active {
+          display: flex;
+        }
+      }
+    }
+  }
+  }
+  
