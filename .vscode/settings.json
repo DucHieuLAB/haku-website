@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.renderWhitespace": "all"
+}

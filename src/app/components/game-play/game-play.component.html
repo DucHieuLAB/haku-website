@@ -1,0 +1,52 @@
+<!-- game-play.component.html -->
+
+<div class="h-screen w-screen bg-cyan-200 flex items-center justify-center relative font-mono">
+  <!-- Bảng thông tin bên trái -->
+  <div class="score-panel">
+    <p>Score: {{ score }}</p>
+    <p>Name: {{ name }}</p>
+    <p>Class: {{ class }}</p>
+  </div>
+
+  <!-- Khung chính -->
+  <div class="main-frame">
+    <div class="top-bar">
+      <p>Time: {{ time }}</p>
+      <p>NumOfGet: {{ numOfGet }}</p>
+    </div>
+
+    <!-- Khung gợi ý -->
+    <div class="hint-box">
+      <img
+        src="src/assets/images/defaule.jpg"
+        alt="Hint Image"
+        class="hint-image"
+      />
+      <div class="hint-text">
+        <p class="text-sm text-gray-600 mb-1">💡 Gợi ý:</p>
+        <p class="text-lg font-semibold text-gray-800">{{ hint }}</p>
+      </div>
+    </div>
+
+    <!-- Khung ô chữ -->
+    <div class="word-box">
+      <div class="game-container">
+        <div class="word-display">
+          <span *ngFor="let char of displayedWord ; let i = index">
+            <input
+              type="text"
+              [value]="char"
+              (input)="onInputChange(i, $event)"
+              [readonly]="isGameOver"
+              maxlength="1"
+              class="input-char"
+              [tabindex]="i + 1"
+              (click)="selectAllText($event)"
+            />
+          </span>
+        </div>
+        <button (click)="submitGuess()">Submit Guess</button>
+      </div>
+    </div>
+  </div>
+</div>
