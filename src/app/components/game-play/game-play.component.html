@@ -1,52 +1,78 @@
 <!-- game-play.component.html -->
 
-<div class="h-screen w-screen bg-cyan-200 flex items-center justify-center relative font-mono">
-  <!-- Bảng thông tin bên trái -->
-  <div class="score-panel">
-    <p>Score: {{ score }}</p>
-    <p>Name: {{ name }}</p>
-    <p>Class: {{ class }}</p>
-  </div>
+<div
+	class="h-screen w-screen bg-cyan-200 flex items-center justify-center relative font-mono"
+>
+	<!-- Bảng thông tin bên trái -->
+	<div class="score-panel">
+		<p>Score: {{ score }}</p>
+		<p>Name: {{ name }}</p>
+		<p>Class: {{ class }}</p>
+	</div>
+	<app-game-menu
+		*ngIf="showMenu"
+		(onStart)="startNewGame()"
+		(onPause)="pauseGame()"
+		(onResume)="resumeGame()"
+	>
+	</app-game-menu>
+	<app-start-prompt
+		*ngIf="showStartPrompt"
+		(onStartGame)="handleStartConfirm($event)"
+	>
+	</app-start-prompt>
+	<!-- Khung chính -->
 
-  <!-- Khung chính -->
-  <div class="main-frame">
-    <div class="top-bar">
-      <p>Time: {{ time }}</p>
-      <p>NumOfGet: {{ numOfGet }}</p>
-    </div>
+	<div *ngIf="isGameStarted" class="main-frame">
+		<div class="top-bar">
+			<p>Time: {{ timeLeft }}</p>
+			<p>NumOfGet: {{ attemptsLeft }}</p>
+		</div>
+		<div *ngIf="hasGuessedWrong" class="text-red-500 mt-2">
+			Bạn đã đoán sai. Một gợi ý đã được bật mí!
+		</div>
+		<!-- Khung gợi ý -->
+		<div class="hint-box">
+			<img
+				src="src/assets/images/defaule.jpg"
+				alt="Hint Image"
+				class="hint-image"
+			/>
+			<div class="hint-text">
+				<p class="text-sm text-gray-600 mb-1">💡 Gợi ý:</p>
+				<p class="text-lg font-semibold text-gray-800">{{ hint }}</p>
+			</div>
+		</div>
 
-    <!-- Khung gợi ý -->
-    <div class="hint-box">
-      <img
-        src="src/assets/images/defaule.jpg"
-        alt="Hint Image"
-        class="hint-image"
-      />
-      <div class="hint-text">
-        <p class="text-sm text-gray-600 mb-1">💡 Gợi ý:</p>
-        <p class="text-lg font-semibold text-gray-800">{{ hint }}</p>
-      </div>
-    </div>
-
-    <!-- Khung ô chữ -->
-    <div class="word-box">
-      <div class="game-container">
-        <div class="word-display">
-          <span *ngFor="let char of displayedWord ; let i = index">
-            <input
-              type="text"
-              [value]="char"
-              (input)="onInputChange(i, $event)"
-              [readonly]="isGameOver"
-              maxlength="1"
-              class="input-char"
-              [tabindex]="i + 1"
-              (click)="selectAllText($event)"
-            />
-          </span>
-        </div>
-        <button (click)="submitGuess()">Submit Guess</button>
-      </div>
-    </div>
-  </div>
+		<!-- Khung ô chữ -->
+		<div class="word-box">
+			<div class="game-container">
+				<div class="word-display">
+					<span
+						*ngFor="
+							let letter of displayedWord;
+							let i = index;
+							trackBy: trackByIndex
+						"
+					>
+						<input
+							#inputElement
+							type="text"
+							[value]="letter"
+							(input)="onInputChange(i, $event)"
+							maxlength="1"
+							class="input-char"
+							[tabindex]="i + 1"
+							(click)="selectAllText($event)"
+							[readonly]="isGameOver || revealedIndices.has(i)"
+							[class.hinted]="revealedIndices.has(i)"
+						/>
+					</span>
+				</div>
+				<button class="border-dashed" (click)="submitGuess()">
+					Submit Guess
+				</button>
+			</div>
+		</div>
+	</div>
 </div>

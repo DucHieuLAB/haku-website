@@ -1,54 +1,49 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from "./components/header/header.component";
-import { GamePlayComponent } from "./components/game-play/game-play.component";
+import { HeaderComponent } from './components/header/header.component';
+import { GamePlayComponent } from './components/game-play/game-play.component';
+import { CommonModule } from '@angular/common';
+import { StartPromptComponent } from './components/common/start-prompt/start-prompt.component';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, GamePlayComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+	selector: 'app-root',
+	imports: [RouterOutlet, HeaderComponent, GamePlayComponent, CommonModule],
+	templateUrl: './app.component.html',
+	styleUrl: './app.component.scss',
 })
-export class AppComponent  implements AfterViewInit{
+export class AppComponent implements AfterViewInit {
+	constructor(private cdr: ChangeDetectorRef) {}
 
-  title = 'haku-website';
+	showStartPrompt: boolean = false;
+	isGameStarted: boolean = false;
+	title = 'haku-website';
+	isGameVisible: boolean = false;
 
-    
-  ngAfterViewInit(): void {
-    const wrapper = document.querySelector('.wrapper-scroll');
-    const wheelEvent = event as WheelEvent; 
-    let isScrolling = false;
+	ngAfterViewInit(): void {
+		const wrapper = document.querySelector('.wrapper-scroll');
+		let isScrolling = false;
 
-    if (wrapper) {
-      wrapper.addEventListener('wheel', (event) => {
-        if (isScrolling) return;
+		if (wrapper) {
+			wrapper.addEventListener('wheel', (event) => {
+				if (isScrolling) return;
 
-        isScrolling = true;
-        // const direction = wheelEvent.deltaY > 0 ? 1 : -1;
-        const sections = Array.from(wrapper.querySelectorAll('.section'));
-        const currentScroll = wrapper.scrollTop;
-        const viewHeight = window.innerHeight;
+				isScrolling = true;
+				const currentScroll = wrapper.scrollTop;
+				const viewHeight = window.innerHeight;
 
-        // Tìm index section hiện tại
-        const currentIndex = Math.round(currentScroll / viewHeight);
-        // let nextIndex = currentIndex + direction;
+				// Tìm index section hiện tại
+				const currentIndex = Math.round(currentScroll / viewHeight);
 
-        // if (nextIndex < 0) nextIndex = 0;
-        // if (nextIndex >= sections.length) nextIndex = sections.length - 1;
+				// Cuộn mượt đến section kế tiếp
+				wrapper.scrollTo({
+					behavior: 'smooth',
+				});
 
-        // const targetScroll = nextIndex * viewHeight;
-
-        // Cuộn mượt đến section kế tiếp
-        wrapper.scrollTo({
-          // top: targetScroll,
-          behavior: 'smooth',
-        });
-
-        // Thời gian delay cho hiệu ứng mượt
-        setTimeout(() => {
-          isScrolling = false;
-        }, 2000); // ← Điều chỉnh thời gian ở đây (ms)
-      });
-    }
-  }
+				// Thời gian delay cho hiệu ứng mượt
+				setTimeout(() => {
+					isScrolling = false;
+				}, 2000); // ← Điều chỉnh thời gian ở đây (ms)
+			});
+		}
+	}
 }
