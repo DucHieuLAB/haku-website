@@ -11,7 +11,7 @@
 	</div>
 	<app-game-menu
 		*ngIf="showMenu"
-		(onStart)="startNewGame()"
+		(onStart)="onStartClick()"
 		(onPause)="pauseGame()"
 		(onResume)="resumeGame()"
 	>
@@ -19,6 +19,7 @@
 	<app-start-prompt
 		*ngIf="showStartPrompt"
 		(onStartGame)="handleStartConfirm($event)"
+		(onCancelGame)="handleStartConfirm($event)"
 	>
 	</app-start-prompt>
 	<!-- Khung chính -->

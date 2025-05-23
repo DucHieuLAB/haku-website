@@ -3,13 +3,13 @@ import {
 	AfterViewInit,
 	Component,
 	ElementRef,
-	Input,
 	OnDestroy,
 	OnInit,
 	QueryList,
 	ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
 import { GameMenuComponent } from '../common/game-menu/game-menu.component';
 import { StartPromptComponent } from '../common/start-prompt/start-prompt.component';
 
@@ -25,6 +25,7 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	// Init infor
 	readonly TIME_COUNTDOWN: number = 30;
 	readonly NUM_OF_GET: number = 3;
+	readonly DEFAUL_TIME: number = 60; // 60 s / word
 	score: string = '2300';
 	name: string = 'Haku';
 	class: string = 'Class';
@@ -43,17 +44,16 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	currentIndex: number = 0;
 
 	// Countdown & attempts
-	timeLeft: number = 30;
+	timeLeft: number = 0;
 	intervalId: any;
 	attemptsLeft: number = 3;
-
-	char = '';
 
 	targetWord: string = ''; // Từ cần đoán
 	displayedWord: string[] = []; // Giao diện ban đầu
 
 	isGameOver: boolean = false;
 	isGameStarted: boolean = false;
+	isTransitioningWord: boolean = false;
 	showStartPrompt: boolean = false;
 	showMenu: boolean = false;
 
@@ -77,8 +77,8 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.targetWord = this.words[this.currentIndex];
 		this.displayedWord = Array(this.targetWord.length).fill('_');
 		this.hint = this.hints[this.currentIndex];
-		this.attemptsLeft = 3;
-		this.timeLeft = 30;
+		this.attemptsLeft = this.NUM_OF_GET;
+		this.timeLeft = this.DEFAUL_TIME;
 	}
 
 	//-----------------------------------------------------
@@ -103,17 +103,23 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	// Summary
 	//-----------------------------------------------------
 	nextWord(): void {
+		this.isTransitioningWord = true;
+		this.revealedIndices.clear();
+		this.displayedWord = [];
+		this.hasGuessedWrong = false;
 		if (this.currentIndex === this.words.length - 1) {
 			this.gameOver();
 			return;
 		}
-
 		this.currentIndex = (this.currentIndex + 1) % this.words.length;
-		this.revealedIndices.clear();
+
 		this.loadWord();
 		this.startTimer();
 		// focus in first element
-		this.inputElements.first?.nativeElement.select();
+		setTimeout(() => {
+			this.isTransitioningWord = false;
+			this.inputElements.first?.nativeElement.select();
+		}, 0);
 	}
 
 	//-----------------------------------------------------
@@ -124,12 +130,12 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	// <param> value </param>
 	//-----------------------------------------------------
 	onInputChange(i: number, event: Event) {
-		const inputElement = event.target as HTMLInputElement; // Chuyển kiểu EventTarget thành HTMLInputElement
-		const value = inputElement.value; // Bây giờ có thể truy cập `value` an toàn
-
+		const inputElement = event.target as HTMLInputElement;
+		const value = inputElement.value;
+		if (this.isTransitioningWord || !this.displayedWord.length) return;
 		// Kiểm tra xem giá trị nhập vào có hợp lệ không
 		if (value.length <= 1) {
-			this.displayedWord[i] = value; // Cập nhật giá trị trong mảng `displayedWord`
+			this.displayedWord[i] = value;
 
 			// Chuyển focus sang input tiếp theo khi nhập đủ 1 ký tự
 			if (!value) {
@@ -199,17 +205,14 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 			) {
 				this.displayedWord[i] = this.targetWord[i];
 				this.revealedIndices.add(i);
-				break; // Chỉ gợi ý 1 ký tự mỗi lần
+				break;
 			}
 		}
 	}
 
-	trackByIndex(index: number): number {
-		return index;
-	}
-
 	gameOver() {
-		this.isGameOver = true;
+		this.showMenu = true;
+		this.isGameStarted = false;
 	}
 
 	//-----------------------------------------------------
@@ -221,9 +224,17 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.revealedIndices.clear();
 		this.currentIndex = 0;
 		this.loadWord();
-		this.startTimer();
 		this.showMenu = false;
 		this.isGameStarted = true;
+		this.startTimer();
+	}
+
+	//-----------------------------------------------------
+	// Summary
+	// Hàm chạy khi nhần nút start
+	// Summary
+	//-----------------------------------------------------
+	onStartClick() {
 		this.showStartPrompt = true;
 	}
 
@@ -249,8 +260,12 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.showStartPrompt = false;
 		if (confirmed) {
 			this.isGameStarted = true;
-			this.timeLeft = 30;
-			this.resumeGame();
+			this.timeLeft = this.DEFAUL_TIME;
+			this.startNewGame();
 		}
+	}
+
+	trackByIndex(index: number): number {
+		return index;
 	}
 }
