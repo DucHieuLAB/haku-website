@@ -1,5 +1,5 @@
 <!-- game-play.component.html -->
-
+<app-toastr></app-toastr>
 <div
 	class="h-screen w-screen bg-cyan-200 flex items-center justify-center relative font-mono"
 >
@@ -28,9 +28,6 @@
 		<div class="top-bar">
 			<p>Time: {{ timeLeft }}</p>
 			<p>NumOfGet: {{ attemptsLeft }}</p>
-		</div>
-		<div *ngIf="hasGuessedWrong" class="text-red-500 mt-2">
-			Bạn đã đoán sai. Một gợi ý đã được bật mí!
 		</div>
 		<!-- Khung gợi ý -->
 		<div class="hint-box">

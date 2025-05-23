@@ -17,7 +17,6 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:application",
 					"options": {
-						"baseHref": "/haku-website/",
 						"outputPath": "dist/haku-website",
 						"index": "src/index.html",
 						"browser": "src/main.ts",
@@ -31,7 +30,8 @@
 							}
 						],
 						"styles": ["src/styles.scss"],
-						"scripts": []
+						"scripts": [],
+						"baseHref": "/haku-website/"
 					},
 					"configurations": {
 						"production": {

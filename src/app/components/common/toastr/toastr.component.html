@@ -1,0 +1,15 @@
+<div class="toastr-container">
+	@for (toast of toasts; track toast) {
+	<div class="toast" [ngClass]="toast.type" [@toastAnimation]>
+		<div class="toast-icon">
+			<img [src]="'/icons/' + toast.type + '.png'" alt="{{ toast.type }}" />
+		</div>
+		<div class="toast-content">
+			<div class="toast-title">{{ toast.title }}</div>
+			<div class="toast-message">{{ toast.message }}</div>
+		</div>
+		<button class="close-btn" (click)="removeToast(toast.id)">x</button>
+		<div class="toast-loader"></div>
+	</div>
+	}
+</div>

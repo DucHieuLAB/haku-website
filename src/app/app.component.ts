@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { GamePlayComponent } from './components/game-play/game-play.component';
 import { CommonModule } from '@angular/common';
-import { StartPromptComponent } from './components/common/start-prompt/start-prompt.component';
 
 @Component({
 	selector: 'app-root',

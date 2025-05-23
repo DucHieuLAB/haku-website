@@ -3,6 +3,8 @@ import {
 	AfterViewInit,
 	Component,
 	ElementRef,
+	inject,
+	Inject,
 	OnDestroy,
 	OnInit,
 	QueryList,
@@ -12,21 +14,30 @@ import { FormsModule } from '@angular/forms';
 
 import { GameMenuComponent } from '../common/game-menu/game-menu.component';
 import { StartPromptComponent } from '../common/start-prompt/start-prompt.component';
+import { ToastrComponent } from '../common/toastr/toastr.component';
+import { ToasterService } from '../common/toastr/toaster.service';
 
 @Component({
+	standalone: true,
 	selector: 'app-game-play',
 	templateUrl: './game-play.component.html',
-	imports: [FormsModule, CommonModule, GameMenuComponent, StartPromptComponent],
+	imports: [
+		FormsModule,
+		CommonModule,
+		GameMenuComponent,
+		StartPromptComponent,
+		ToastrComponent,
+	],
 	styleUrl: './game-play.component.scss',
 })
 export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChildren('inputElement') inputElements!: QueryList<ElementRef>;
-
+	private toastrService = inject(ToasterService);
 	// Init infor
 	readonly TIME_COUNTDOWN: number = 30;
 	readonly NUM_OF_GET: number = 3;
 	readonly DEFAUL_TIME: number = 60; // 60 s / word
-	score: string = '2300';
+	score: number = 0;
 	name: string = 'Haku';
 	class: string = 'Class';
 	// Game State
@@ -56,8 +67,6 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	isTransitioningWord: boolean = false;
 	showStartPrompt: boolean = false;
 	showMenu: boolean = false;
-
-	hasGuessedWrong: boolean = false;
 
 	ngOnInit(): void {
 		this.showMenu = true;
@@ -106,7 +115,6 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.isTransitioningWord = true;
 		this.revealedIndices.clear();
 		this.displayedWord = [];
-		this.hasGuessedWrong = false;
 		if (this.currentIndex === this.words.length - 1) {
 			this.gameOver();
 			return;
@@ -177,14 +185,31 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	//-----------------------------------------------------
 	submitGuess() {
 		const guessedWord = this.displayedWord.join('');
+
 		if (guessedWord.toUpperCase() === this.targetWord.toUpperCase()) {
-			this.nextWord();
+			this.toastrService.showSuccess(
+				'Success',
+				`🎉 Tuyệt vời! Bạn đã đoán đúng từ khóa: ${this.targetWord.toUpperCase()}`
+			);
+
+			// Tự động chuyển sang từ mới sau 2 giây
+			setTimeout(() => {
+				this.nextWord();
+			}, 2000);
 		} else {
 			this.attemptsLeft--;
-			this.hasGuessedWrong = true;
-			if (this.attemptsLeft == 0) {
+
+			if (this.attemptsLeft === 0) {
+				this.toastrService.showError(
+					'Error',
+					`💥 Hết lượt rồi! Từ đúng là: ${this.targetWord.toUpperCase()}. Chuyển sang từ mới nhé!`
+				);
 				this.gameOver();
 			}
+			this.toastrService.showInfor(
+				'Infor',
+				`❗ Sai rồi! Bạn còn ${this.attemptsLeft} lượt. Đã mở thêm một chữ gợi ý.`
+			);
 			this.revealOneLetter();
 		}
 	}
