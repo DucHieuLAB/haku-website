@@ -1,21 +1,43 @@
 <header class="site-header">
-    <div class="container">
-        <!-- <div class="menu-icon" (click)="toggleMenu()">
+	<div class="container">
+		<!-- <div class="menu-icon" (click)="toggleMenu()">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
           </div> -->
-      <div class="logo">HaKu Testsuya</div>
-      <form class="search-form">
-        <input type="text" placeholder="Tìm kiếm..." />
-        <button type="submit">🔍</button>
-      </form>
-      <nav class="navigation">
-        <a href="#">Home</a>
-        <a href="#">Game</a>
-        <a href="#">Contract</a>
-        <a href="#">About</a>
-      </nav>
-    </div>
-  </header>
-  
+		<div class="logo">HaKu Testsuya</div>
+
+		<button class="md:hidden text-2xl" (click)="toggleMenu()">☰</button>
+		<form class="search-form hidden md:block">
+			<input
+				type="text"
+				placeholder="Tìm kiếm..."
+				class="border px-2 py-1 rounded"
+			/>
+			<button type="submit">🔍</button>
+		</form>
+		<nav class="navigation">
+			<a href="#">Home</a>
+			<a href="#">Game</a>
+			<a href="#">Contract</a>
+			<a href="#">About</a>
+		</nav>
+	</div>
+</header>
+<!-- Menu dọc (mobile) -->
+<div class="md:hidden" *ngIf="menuOpen">
+	<nav class="flex flex-col bg-white p-4 shadow-md border-t mobile-nav">
+		<form class="search-form flex">
+			<input
+				type="text"
+				placeholder="Tìm kiếm..."
+				class="flex-1 border px-2 py-1 rounded text-sm"
+			/>
+			<button type="submit" class="ml-2">🔍</button>
+		</form>
+		<a href="#" class="py-2 border-b">Home</a>
+		<a href="#" class="py-2 border-b">Game</a>
+		<a href="#" class="py-2 border-b">Contract</a>
+		<a href="#" class="py-2">About</a>
+	</nav>
+</div>

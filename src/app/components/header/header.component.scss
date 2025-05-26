@@ -1,112 +1,140 @@
 .site-header {
-    background-color: #141a3c;
-    border-bottom: 1px solid #ddd;
-    padding: 12px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-        
-          /* Menu Icon */
-    .menu-icon {
-        display: none;
-        cursor: pointer;
-        span {
-          display: block;
-          width: 30px;
-          height: 4px;
-          margin: 6px 0;
-          background-color: #333;
-          transition: 0.3s ease;
-        }
-      } 
+	background-color: #141a3c;
+	border-bottom: 1px solid #ddd;
+	padding: 12px 0;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 
-      .logo {
-        font-size: 24px;
-        font-weight: bold;
-        color: #dee9bf;
-        font-family: 'Press Start 2P', cursive;
-      }
-  
-      .navigation {
-        a {
-          margin-left: 20px;
-          text-decoration: none;
-          color: #dee9bf;
-          font-weight: 500;
-          transition: color 0.3s ease;
-          font-family: 'Press Start 2P', cursive;
-  
-          &:hover {
-            color: #e9e945;
-          }
-        }
-      }
-  
-      .search-form {
-        display: flex;
-        align-items: center;
-  
-        input {
-          padding: 8px;
-          font-size: 16px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          margin-right: 8px;
-          outline: none;
-        }
-  
-        button {
-          background-color: white ;
-          color: white;
-          padding: 8px 12px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-  
-          &:hover {
-            background-color: #b63f3f;
-          }
-        }
-      }
-    }
-      /* Media Query for Mobile */
-  @media (max-width: 768px) {
-    .container {
-      /* Hiện menu icon trên màn hình nhỏ */
-      .menu-icon {
-        display: block;
-      }
+	.container {
+		max-width: 1200px;
+		margin: auto;
+		padding: 0 16px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 
-      .navigation {
-        /* Ẩn menu mặc định */
-        display: none;
-        width: 100%;
-        flex-direction: column;
-        background-color: #fff;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        padding: 20px;
-        border-top: 1px solid #ddd;
+		/* Menu Icon */
+		.menu-icon {
+			display: none;
+			cursor: pointer;
+			span {
+				display: block;
+				width: 30px;
+				height: 4px;
+				margin: 6px 0;
+				background-color: #333;
+				transition: 0.3s ease;
+			}
+		}
 
-        a {
-          margin: 10px 0;
-        }
+		.logo {
+			font-size: 24px;
+			font-weight: bold;
+			color: #dee9bf;
+			font-family: "Press Start 2P", cursive;
+		}
 
-        &.active {
-          display: flex;
-        }
-      }
-    }
-  }
-  }
-  
+		.navigation {
+			a {
+				margin-left: 20px;
+				text-decoration: none;
+				color: #dee9bf;
+				font-weight: 500;
+				transition: color 0.3s ease;
+				font-family: "Press Start 2P", cursive;
+
+				&:hover {
+					color: #e9e945;
+				}
+			}
+		}
+
+		.search-form {
+			align-items: center;
+
+			input {
+				padding: 8px;
+				font-size: 16px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				margin-right: 8px;
+				outline: none;
+			}
+
+			button {
+				background-color: white;
+				color: white;
+				padding: 8px 12px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: background-color 0.3s;
+
+				&:hover {
+					background-color: #b63f3f;
+				}
+			}
+		}
+	}
+	@media (min-width: 768px) {
+		display: flex; // Hiện lại khi desktop
+		align-items: center;
+	}
+	/* Media Query for Mobile */
+	@media (max-width: 768px) {
+		.mobile-nav {
+			background-color: #f9f9f9;
+			color: #333;
+			font-family: "Press Start 2P", cursive;
+			padding: 16px;
+			border-top: 1px solid #e0e0e0;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+			a {
+				display: block;
+				padding: 12px 0;
+				border-bottom: 1px solid #e0e0e0;
+				text-decoration: none;
+				transition: background-color 0.2s ease, color 0.2s ease;
+
+				&:hover {
+					background-color: #eee;
+					color: #111;
+				}
+
+				&:last-child {
+					border-bottom: none;
+				}
+			}
+		}
+
+		.container {
+			/* Hiện menu icon trên màn hình nhỏ */
+			.menu-icon {
+				display: block;
+			}
+
+			.navigation {
+				/* Ẩn menu mặc định */
+				display: none;
+				width: 100%;
+				flex-direction: column;
+				background-color: #fff;
+				position: absolute;
+				top: 60px;
+				left: 0;
+				padding: 20px;
+				border-top: 1px solid #ddd;
+
+				a {
+					margin: 10px 0;
+				}
+
+				&.active {
+					display: flex;
+				}
+			}
+		}
+	}
+}

@@ -31,7 +31,7 @@ export class ToastrComponent implements OnInit, OnDestroy {
 	private toastService = inject(ToasterService);
 
 	toasts: Toast[] = [];
-	private subscription!: Subscription; // sửa Subscribable -> Subscription
+	private subscription!: Subscription;
 
 	ngOnInit(): void {
 		this.subscription = this.toastService.toasts$.subscribe(

@@ -9,6 +9,9 @@
 		<p>Name: {{ name }}</p>
 		<p>Class: {{ class }}</p>
 	</div>
+	<div>
+		<button (click)="toggleMusic()" class="btn-toggle-music">🔊</button>
+	</div>
 	<app-game-menu
 		*ngIf="showMenu"
 		(onStart)="onStartClick()"
@@ -32,7 +35,7 @@
 		<!-- Khung gợi ý -->
 		<div class="hint-box">
 			<img
-				src="src/assets/images/defaule.jpg"
+				src="https://static.vecteezy.com/system/resources/previews/046/395/773/non_2x/smiling-man-waving-hello-with-right-hand-isolated-on-transparent-background-png.png"
 				alt="Hint Image"
 				class="hint-image"
 			/>

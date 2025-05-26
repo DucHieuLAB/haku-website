@@ -16,6 +16,7 @@ import { GameMenuComponent } from '../common/game-menu/game-menu.component';
 import { StartPromptComponent } from '../common/start-prompt/start-prompt.component';
 import { ToastrComponent } from '../common/toastr/toastr.component';
 import { ToasterService } from '../common/toastr/toaster.service';
+import { environment } from '../../../../environment';
 
 @Component({
 	standalone: true,
@@ -32,6 +33,7 @@ import { ToasterService } from '../common/toastr/toaster.service';
 })
 export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChildren('inputElement') inputElements!: QueryList<ElementRef>;
+	private audio: HTMLAudioElement | null = null;
 	private toastrService = inject(ToasterService);
 	// Init infor
 	readonly TIME_COUNTDOWN: number = 30;
@@ -39,7 +41,8 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	readonly DEFAUL_TIME: number = 60; // 60 s / word
 	score: number = 0;
 	name: string = 'Haku';
-	class: string = 'Class';
+	class: string = 'Haku Class Game';
+
 	// Game State
 	words: string[] = ['hello', 'apple', 'banana'];
 	hints: string[] = [
@@ -47,6 +50,7 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 		'Một loại trái cây màu đỏ hoặc xanh, giòn.',
 		'Trái cây vàng, dài mà khỉ rất thích.',
 	];
+	// Đưa ra gợi ý
 	revealedIndices: Set<number> = new Set<number>();
 
 	// Word Hint
@@ -69,13 +73,31 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	showMenu: boolean = false;
 
 	ngOnInit(): void {
+		this.audio = new Audio(
+			`${environment.baseHref}/assets/audio/game_background.mp3`
+		);
+		this.audio.loop = true;
 		this.showMenu = true;
 		this.isGameStarted = false;
 	}
 
 	ngAfterViewInit(): void {}
 
-	ngOnDestroy(): void {}
+	ngOnDestroy(): void {
+		if (this.audio) {
+			this.audio.pause;
+			this.audio = null;
+		}
+	}
+
+	toggleMusic(): void {
+		if (!this.audio) return;
+		if (this.audio.paused) {
+			this.audio.play();
+		} else {
+			this.audio.pause();
+		}
+	}
 
 	//-----------------------------------------------------
 	// Summary
@@ -104,6 +126,10 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 				this.nextWord();
 			}
 		}, 1000);
+		// Bắt đầu phát nhạc khi game bắt đầu
+		if (this.audio) {
+			this.audio.play().catch((err) => console.error('Audio play error:', err));
+		}
 	}
 
 	//-----------------------------------------------------
@@ -188,26 +214,27 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		if (guessedWord.toUpperCase() === this.targetWord.toUpperCase()) {
 			this.toastrService.showSuccess(
-				'Success',
+				'Chính xác',
 				`🎉 Tuyệt vời! Bạn đã đoán đúng từ khóa: ${this.targetWord.toUpperCase()}`
 			);
+			this.score++;
 
-			// Tự động chuyển sang từ mới sau 2 giây
+			// Tự động chuyển sang từ mới sau 3 giây
 			setTimeout(() => {
 				this.nextWord();
-			}, 2000);
+			}, 3000);
 		} else {
 			this.attemptsLeft--;
 
 			if (this.attemptsLeft === 0) {
 				this.toastrService.showError(
-					'Error',
+					'Opps!',
 					`💥 Hết lượt rồi! Từ đúng là: ${this.targetWord.toUpperCase()}. Chuyển sang từ mới nhé!`
 				);
 				this.gameOver();
 			}
 			this.toastrService.showInfor(
-				'Infor',
+				'Thêm gợi ý',
 				`❗ Sai rồi! Bạn còn ${this.attemptsLeft} lượt. Đã mở thêm một chữ gợi ý.`
 			);
 			this.revealOneLetter();
@@ -238,6 +265,10 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	gameOver() {
 		this.showMenu = true;
 		this.isGameStarted = false;
+		this.score = 0;
+		if (this.audio) {
+			this.audio.pause();
+		}
 	}
 
 	//-----------------------------------------------------
@@ -270,6 +301,9 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	//-----------------------------------------------------
 	pauseGame() {
 		clearInterval(this.intervalId);
+		if (this.audio) {
+			this.audio.pause();
+		}
 	}
 
 	//-----------------------------------------------------
@@ -279,6 +313,11 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 	//-----------------------------------------------------
 	resumeGame() {
 		this.startTimer();
+		if (this.audio) {
+			this.audio
+				.play()
+				.catch((err) => console.error('Audio resume error:', err));
+		}
 	}
 
 	handleStartConfirm(confirmed: boolean) {
@@ -287,6 +326,7 @@ export class GamePlayComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.isGameStarted = true;
 			this.timeLeft = this.DEFAUL_TIME;
 			this.startNewGame();
+			setTimeout(this.inputElements.first?.nativeElement.select(), 0);
 		}
 	}
 
